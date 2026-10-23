@@ -1,0 +1,47 @@
+name: Build FcamerA APK
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find and unzip project
+        run: |
+          ZIP=$(find . -maxdepth 3 -iname '*.zip' | head -n1)
+          unzip -o -q "$ZIP" -d unpacked
+          SETTINGS=$(find unpacked -name settings.gradle* | head -n1)
+          echo "PROJECT_DIR=$(dirname "$SETTINGS")" >> "$GITHUB_ENV"
+
+      - name: Change App Display Name to FcamerA
+        run: |
+          STRINGS_FILE=$(find unpacked -name strings.xml | grep "src/main/res/values/strings.xml" | head -n1)
+          if [ -n "$STRINGS_FILE" ]; then
+            sed -i 's/<string name="app_name">.*<\/string>/<string name="app_name">FcamerA<\/string>/g' "$STRINGS_FILE"
+          fi
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Accept Android licenses
+        run: yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null || true
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Build APK
+        run: gradle -p "$PROJECT_DIR" --no-daemon assembleDebug
+
+      - name: Rename APK
+        run: |
+          OLD_PATH=$(find unpacked -name "*-debug.apk" | head -n1)
+          mv "$OLD_PATH" "${{ env.PROJECT_DIR }}/FcamerA.apk"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FcamerA-apk
+          path: ${{ env.PROJECT_DIR }}/FcamerA.apk
