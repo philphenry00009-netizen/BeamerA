@@ -17,20 +17,22 @@ name: Build APK
             java-version: '11'
             distribution: 'temurin'
 
-        - name: Extract and Setup
+        - name: Extract Source
           run: |
+            if [ ! -f "camf.zip" ]; then echo "ERROR: camf.zip
+  not found in repo!"; exit 1; fi
             unzip camf.zip -d extracted
-            # Find the folder with build.gradle and move its
-  contents to root
-            DIR=$(find extracted -name "build.gradle" -exec
-  dirname {} \; | head -n 1)
-            cp -r $DIR/* .
+            PROJECT_DIR=$(find extracted -name "build.gradle"
+  -exec dirname {} \; | head -n 1)
+            if [ -z "$PROJECT_DIR" ]; then echo "ERROR: No
+  build.gradle found in zip!"; exit 1; fi
+            cp -r $PROJECT_DIR/* .
             chmod +x gradlew
 
-        - name: Build
+        - name: Build APK
           run: ./gradlew assembleDebug
 
-        - name: Upload
+        - name: Upload APK
           uses: actions/upload-artifact@v3
           with:
             name: APK
