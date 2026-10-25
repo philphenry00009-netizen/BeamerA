@@ -1,13 +1,41 @@
-- name: Find and unzip project
-  run: |
-    echo "--- repo files ---"
-    find . -maxdepth 3 -not -path './.git/*' | head -60
-    ZIP=$(find . -maxdepth 3 -iname '*.zip' | head -n1)
-    echo "ZIP=[$ZIP]"
-    mkdir -p unpacked
-    if [ -n "$ZIP" ]; then unzip -o -q "$ZIP" -d unpacked; else cp -r . unpacked/ 2>/dev/null; fi
-    echo "--- unpacked ---"
-    find unpacked -maxdepth 4 | head -60
-    SETTINGS=$(find unpacked -name 'settings.gradle*' | head -n1)
-    [ -z "$SETTINGS" ] && echo "NO settings.gradle FOUND" && exit 1
-    echo "PROJECT_DIR=$(dirname "$SETTINGS")" >> "$GITHUB_ENV"
+name: Build FcamerA APK
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find project
+        run: |
+          find . -maxdepth 3 -not -path './.git/*' | head -60
+          ZIP=$(find . -maxdepth 3 -iname '*.zip' | head -n1)
+          echo "ZIP=[$ZIP]"
+          if [ -n "$ZIP" ]; then unzip -o -q "$ZIP" -d unpacked; fi
+          SETTINGS=$(find . -name 'settings.gradle*' -not -path './.git/*' | head -n1)
+          echo "SETTINGS=[$SETTINGS]"
+          [ -z "$SETTINGS" ] && echo "NO settings.gradle FOUND" && exit 1
+          echo "PROJECT_DIR=$(dirname "$SETTINGS")" >> "$GITHUB_ENV"
+
+      - name: Change app name
+        run: |
+          F=$(find "$PROJECT_DIR" -path '*src/main/res/values/strings.xml' | head -n1)
+          [ -n "$F" ] && sed -i 's|<string name="app_name">.*</string>|<string name="app_name">FcamerA</string>|' "$F" || true
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Build APK
+        run: gradle -p "$PROJECT_DIR" --no-daemon assembleDebug
+
+      - name: Rename APK
+        run: |
+          OLD=$(find "$PROJECT_DIR" -name '*-debug.apk' | head -n1)
