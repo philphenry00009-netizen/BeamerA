@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="delete_clip_message">
+        <item quantity="other">"These clips will be permanently
+deleted from your phone."</item>
+        <item quantity="one">"This clip will be permanently
+deleted from your phone."</item>
+    </plurals>
+    <plurals name="delete_n_clips">
+        <item quantity="other">Delete %d Clips</item>
+        <item quantity="one">Delete Clip</item>
+    </plurals>
+    <plurals name="exo_controls_fastforward_by_amount_description">
+        <item quantity="other">Fast forward %d seconds</item>
+        <item quantity="one">Fast forward %d second</item>
+    </plurals>
+    <plurals name="exo_controls_rewind_by_amount_description">
+        <item quantity="other">Rewind %d seconds</item>
+        <item quantity="one">Rewind %d second</item>
+    </plurals>
+    <plurals name="mtrl_badge_content_description">
+        <item quantity="other">%d new notifications</item>
+        <item quantity="one">%d new notification</item>
+    </plurals>
+    <plurals name="n_clips_synced">
+        <item quantity="other">%d Clips Synced</item>
+        <item quantity="one">%d Clip Synced</item>
+    </plurals>
+    <plurals name="num_clips">
+        <item quantity="other">%d Clips</item>
+        <item quantity="one">%d Clip</item>
+    </plurals>
+    <plurals name="num_members">
+        <item quantity="other">%d Members</item>
+        <item quantity="one">%d Member</item>
+    </plurals>
+    <plurals name="syncing_n_clips">
+        <item quantity="other">Syncing %d Clips</item>
+        <item quantity="one">Syncing %d Clip</item>
+    </plurals>
+    <plurals name="x_selected">
+        <item quantity="other">%d Selected</item>
+        <item quantity="one">%d Selected</item>
+    </plurals>
+</resources>
