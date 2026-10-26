@@ -22,3 +22,8 @@
     PROJECT_DIR=$(dirname "$SETTINGS")
     echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
     echo "Using project dir: $PROJECT_DIR"
+- name: Build APK
+  working-directory: ./path/to/actual/gradle/project  # Update this to the correct subfolder
+  run: ./gradlew assembleDebug
+  - name: List files to find project root
+  run: find . -maxdepth 3 -name "settings.gradle*"
