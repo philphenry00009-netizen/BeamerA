@@ -4,12 +4,11 @@ import json
 import subprocess
 
 # Configuration
-PORT = 1 # Standard RFCOMM channel
-BIND_ADDRESS = "00:00:00:00:00:00" # Explicitly bind to the first available adapter
+PORT = 5000 # Standard TCP port for Bima Sync
+BIND_ADDRESS = "0.0.0.0" # Listen on all network interfaces (Wi-Fi/Ethernet)
 
 def update_clipboard(text):
     try:
-        # Uses xclip to set the primary and clipboard selections
         subprocess.run(['xclip', '-selection', 'clipboard', '-i'], input=text.encode('utf-8'), check=True)
         subprocess.run(['xclip', '-selection', 'primary', '-i'], input=text.encode('utf-8'), check=True)
         print(f"[CLIPBOARD] Updated: {text[:30]}...")
@@ -18,24 +17,24 @@ def update_clipboard(text):
 
 def send_notification(title, message):
     try:
-        # Uses notify-send for desktop alerts
         subprocess.run(['notify-send', title, message], check=True)
         print(f"[NOTIFY] {title}: {message}")
     except Exception as e:
         print(f"Notification error: {e}")
 
 def start_daemon():
-    print("--- Bima Sync Linux Daemon ---")
-    print("Initializing Bluetooth RFCOMM server...")
+    print("--- Bima Sync Linux Daemon (Network Mode) ---")
+    print(f"Initializing TCP server on port {PORT}...")
 
     try:
-        # Create RFCOMM socket
-        server_sock = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
+        # Create TCP socket
+        server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server_sock.bind((BIND_ADDRESS, PORT))
-        server_sock.listen(1)
+        server_sock.listen(5)
 
-        print(f"Listening for connections on RFCOMM channel {PORT}...")
-        print("Ensure your Android phone is paired with this laptop.")
+        print(f"Listening for connections on port {PORT}...")
+        print("Make sure your phone is on the same Wi-Fi as this laptop.")
 
         while True:
             client_sock, address = server_sock.accept()
@@ -43,11 +42,10 @@ def start_daemon():
 
             try:
                 while True:
-                    data = client_sock.recv(1024).decode('utf-8').strip()
+                    data = client_sock.recv(4096).decode('utf-8').strip()
                     if not data:
                         break
 
-                    # Check if data is JSON (Notification) or Plain Text (Clipboard)
                     if data.startswith('{') and data.endswith('}'):
                         try:
                             payload = json.loads(data)
