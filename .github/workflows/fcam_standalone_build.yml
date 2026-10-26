@@ -20,16 +20,12 @@ jobs:
           curl -L https://bitbucket.org/iBotPeaches/Apktool/downloads/apktool_2.9.3.jar -o apktool.jar
           sudo mv apktool.jar /usr/local/bin/apktool.jar
 
-      - name: Fix Resource Errors
-        run: |
-          # Remove the problematic v34 colors that cause the build to fail on runners
-          # These are only for Android 14+ and not critical for basic functionality
-          rm -rf fcam-source/res/values-v34
-
       - name: Build APK
         run: |
-          # Using --use-aapt2 to properly handle modern Android resources
-          apktool b --use-aapt2 fcam-source -o FcamerA.apk
+          # Using -r to preserve the original resource table (the most stable way)
+          # Since we want to keep our Manifest changes, we'll build it and then
+          # we will handle the manifest via the build process.
+          apktool b -r fcam-source -o FcamerA.apk
 
       - name: Sign APK
         run: |
