@@ -5,7 +5,7 @@ import subprocess
 
 # Configuration
 PORT = 1 # Standard RFCOMM channel
-BIND_ADDRESS = "" # Listen on all available adapters
+BIND_ADDRESS = "00:00:00:00:00:00" # Explicitly bind to the first available adapter
 
 def update_clipboard(text):
     try:
