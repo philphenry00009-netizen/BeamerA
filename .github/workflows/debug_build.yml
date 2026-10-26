@@ -1,0 +1,21 @@
+name: Debug Build
+on: [workflow_dispatch]
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: List files
+        run: ls -R
+      - name: Check fcam-source
+        run: ls -la fcam-source
+      - name: Test Apktool
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk
+          curl -L https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool -o apktool
+          chmod +x apktool
+          sudo mv apktool /usr/local/bin/apktool
+          curl -L https://bitbucket.org/iBotPeaches/Apktool/downloads/apktool_2.9.3.jar -o apktool.jar
+          sudo mv apktool.jar /usr/local/bin/apktool.jar
+          apktool -version
