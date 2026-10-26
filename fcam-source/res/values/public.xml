@@ -3650,19 +3650,6 @@
     <public type="dimen" name="tooltip_vertical_padding" id="0x7f070431" />
     <public type="dimen" name="tooltip_y_offset_non_touch" id="0x7f070432" />
     <public type="dimen" name="tooltip_y_offset_touch" id="0x7f070433" />
-    <public type="drawable" name="$avd_hide_password__0" id="0x7f080000" />
-    <public type="drawable" name="$avd_hide_password__1" id="0x7f080001" />
-    <public type="drawable" name="$avd_hide_password__2" id="0x7f080002" />
-    <public type="drawable" name="$avd_show_password__0" id="0x7f080003" />
-    <public type="drawable" name="$avd_show_password__1" id="0x7f080004" />
-    <public type="drawable" name="$avd_show_password__2" id="0x7f080005" />
-    <public type="drawable" name="$follow_focus__0" id="0x7f080006" />
-    <public type="drawable" name="$m3_avd_hide_password__0" id="0x7f080007" />
-    <public type="drawable" name="$m3_avd_hide_password__1" id="0x7f080008" />
-    <public type="drawable" name="$m3_avd_hide_password__2" id="0x7f080009" />
-    <public type="drawable" name="$m3_avd_show_password__0" id="0x7f08000a" />
-    <public type="drawable" name="$m3_avd_show_password__1" id="0x7f08000b" />
-    <public type="drawable" name="$m3_avd_show_password__2" id="0x7f08000c" />
     <public type="drawable" name="$mtrl_checkbox_button_checked_unchecked__0" id="0x7f08000d" />
     <public type="drawable" name="$mtrl_checkbox_button_checked_unchecked__1" id="0x7f08000e" />
     <public type="drawable" name="$mtrl_checkbox_button_checked_unchecked__2" id="0x7f08000f" />
@@ -3763,8 +3750,6 @@
     <public type="drawable" name="auto_hud_display" id="0x7f08008f" />
     <public type="drawable" name="auto_small" id="0x7f080090" />
     <public type="drawable" name="auto_small_active" id="0x7f080091" />
-    <public type="drawable" name="avd_hide_password" id="0x7f080092" />
-    <public type="drawable" name="avd_show_password" id="0x7f080093" />
     <public type="drawable" name="battery_indicator" id="0x7f080094" />
     <public type="drawable" name="battery_indicator_warning" id="0x7f080095" />
     <public type="drawable" name="btn_checkbox_checked_mtrl" id="0x7f080096" />
@@ -3885,7 +3870,6 @@
     <public type="drawable" name="focus_assist" id="0x7f080130" />
     <public type="drawable" name="focus_direction_1" id="0x7f080131" />
     <public type="drawable" name="focus_direction_2" id="0x7f080132" />
-    <public type="drawable" name="follow_focus" id="0x7f080133" />
     <public type="drawable" name="goodtake" id="0x7f080134" />
     <public type="drawable" name="goodtake_active" id="0x7f080135" />
     <public type="drawable" name="grids" id="0x7f080138" />
@@ -3945,8 +3929,6 @@
     <public type="drawable" name="lut_selector" id="0x7f08016e" />
     <public type="drawable" name="lut_selector_active" id="0x7f08016f" />
     <public type="drawable" name="lut_selector_disabled" id="0x7f080170" />
-    <public type="drawable" name="m3_avd_hide_password" id="0x7f080171" />
-    <public type="drawable" name="m3_avd_show_password" id="0x7f080172" />
     <public type="drawable" name="m3_bottom_sheet_drag_handle" id="0x7f080173" />
     <public type="drawable" name="m3_password_eye" id="0x7f080174" />
     <public type="drawable" name="m3_popupmenu_background_overlay" id="0x7f080175" />
