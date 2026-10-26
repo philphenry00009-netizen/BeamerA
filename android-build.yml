@@ -1,29 +1,42 @@
-- name: Find and unzip project
-  shell: bash
-  run: |
-    set -euxo pipefail
+name: Build Phrms APK
 
-    ZIP=$(find . -maxdepth 4 -iname '*.zip' | head -n 1)
-    if [ -z "$ZIP" ]; then
-      echo "No ZIP archive found in repository root"
-      exit 1
-    fi
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
-    rm -rf unpacked
-    unzip -o -q "$ZIP" -d unpacked
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-    SETTINGS=$(find unpacked -type f \( -name 'settings.gradle' -o -name 'settings.gradle.kts' \) | head -n 1)
-    if [ -z "$SETTINGS" ]; then
-      echo "No Gradle settings file found in unpacked archive"
-      find unpacked -maxdepth 4 -print
-      exit 1
-    fi
+      - name: Unzip project
+        run: |
+          mkdir -p build_src
+          unzip -q "$(ls *.zip | head -n1)" -d build_src
+          PROJECT_DIR=$(dirname "$(find build_src -name settings.gradle.kts | head -n1)")
+          echo "Project folder: $PROJECT_DIR"
+          echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
 
-    PROJECT_DIR=$(dirname "$SETTINGS")
-    echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
-    echo "Using project dir: $PROJECT_DIR"
-- name: Build APK
-  working-directory: ./path/to/actual/gradle/project  # Update this to the correct subfolder
-  run: ./gradlew assembleDebug
-  - name: List files to find project root
-  run: find . -maxdepth 3 -name "settings.gradle*"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Accept Android SDK licenses
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses || true
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.7
+
+      - name: Build debug APK
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: gradle assembleDebug --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: phrms-debug-apk
+          path: ${{ env.PROJECT_DIR }}/app/build/outputs/apk/debug/app-debug.apk
