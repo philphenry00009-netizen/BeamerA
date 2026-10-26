@@ -1,0 +1,175 @@
+!!brut.androlib.meta.MetaInfo
+apkFileName: com.blackmagicdesign.android.blackmagiccam.apk
+compressionType: false
+doNotCompress:
+- classes.dex
+- resources.arsc
+- META-INF/androidx.activity_activity-compose.version
+- META-INF/androidx.activity_activity-ktx.version
+- META-INF/androidx.activity_activity.version
+- META-INF/androidx.annotation_annotation-experimental.version
+- META-INF/androidx.appcompat_appcompat-resources.version
+- META-INF/androidx.appcompat_appcompat.version
+- META-INF/androidx.autofill_autofill.version
+- META-INF/androidx.browser_browser.version
+- META-INF/androidx.cardview_cardview.version
+- META-INF/androidx.compose.animation_animation-core.version
+- META-INF/androidx.compose.animation_animation.version
+- META-INF/androidx.compose.foundation_foundation-layout.version
+- META-INF/androidx.compose.foundation_foundation.version
+- META-INF/androidx.compose.material3_material3-window-size-class.version
+- META-INF/androidx.compose.material3_material3.version
+- META-INF/androidx.compose.material_material-icons-core.version
+- META-INF/androidx.compose.material_material-ripple.version
+- META-INF/androidx.compose.material_material.version
+- META-INF/androidx.compose.runtime_runtime-annotation.version
+- META-INF/androidx.compose.runtime_runtime-livedata.version
+- META-INF/androidx.compose.runtime_runtime-retain.version
+- META-INF/androidx.compose.runtime_runtime-saveable.version
+- META-INF/androidx.compose.runtime_runtime.version
+- META-INF/androidx.compose.ui_ui-geometry.version
+- META-INF/androidx.compose.ui_ui-graphics.version
+- META-INF/androidx.compose.ui_ui-text.version
+- META-INF/androidx.compose.ui_ui-tooling-preview.version
+- META-INF/androidx.compose.ui_ui-unit.version
+- META-INF/androidx.compose.ui_ui-util.version
+- META-INF/androidx.compose.ui_ui.version
+- META-INF/androidx.coordinatorlayout_coordinatorlayout.version
+- META-INF/androidx.core_core-ktx.version
+- META-INF/androidx.core_core-splashscreen.version
+- META-INF/androidx.core_core-viewtree.version
+- META-INF/androidx.core_core.version
+- META-INF/androidx.cursoradapter_cursoradapter.version
+- META-INF/androidx.customview_customview-poolingcontainer.version
+- META-INF/androidx.customview_customview.version
+- META-INF/androidx.datastore_datastore-core.version
+- META-INF/androidx.datastore_datastore-preferences-core.version
+- META-INF/androidx.datastore_datastore-preferences.version
+- META-INF/androidx.datastore_datastore.version
+- META-INF/androidx.documentfile_documentfile.version
+- META-INF/androidx.drawerlayout_drawerlayout.version
+- META-INF/androidx.dynamicanimation_dynamicanimation.version
+- META-INF/androidx.emoji2_emoji2-views-helper.version
+- META-INF/androidx.emoji2_emoji2.version
+- META-INF/androidx.exifinterface_exifinterface.version
+- META-INF/androidx.fragment_fragment-ktx.version
+- META-INF/androidx.fragment_fragment.version
+- META-INF/androidx.graphics_graphics-core.version
+- META-INF/androidx.graphics_graphics-path.version
+- META-INF/androidx.graphics_graphics-shapes.version
+- META-INF/androidx.hilt_hilt-lifecycle-viewmodel-compose.version
+- META-INF/androidx.hilt_hilt-lifecycle-viewmodel.version
+- META-INF/androidx.hilt_hilt-navigation-compose.version
+- META-INF/androidx.interpolator_interpolator.version
+- META-INF/androidx.lifecycle_lifecycle-livedata-core-ktx.version
+- META-INF/androidx.lifecycle_lifecycle-livedata-core.version
+- META-INF/androidx.lifecycle_lifecycle-livedata-ktx.version
+- META-INF/androidx.lifecycle_lifecycle-livedata.version
+- META-INF/androidx.lifecycle_lifecycle-process.version
+- META-INF/androidx.lifecycle_lifecycle-runtime-compose.version
+- META-INF/androidx.lifecycle_lifecycle-runtime-ktx.version
+- META-INF/androidx.lifecycle_lifecycle-runtime.version
+- META-INF/androidx.lifecycle_lifecycle-viewmodel-compose.version
+- META-INF/androidx.lifecycle_lifecycle-viewmodel-ktx.version
+- META-INF/androidx.lifecycle_lifecycle-viewmodel-savedstate.version
+- META-INF/androidx.lifecycle_lifecycle-viewmodel.version
+- META-INF/androidx.loader_loader.version
+- META-INF/androidx.navigation_navigation-common.version
+- META-INF/androidx.navigation_navigation-compose.version
+- META-INF/androidx.navigation_navigation-fragment-ktx.version
+- META-INF/androidx.navigation_navigation-fragment.version
+- META-INF/androidx.navigation_navigation-runtime-ktx.version
+- META-INF/androidx.navigation_navigation-runtime.version
+- META-INF/androidx.navigation_navigation-ui-ktx.version
+- META-INF/androidx.navigation_navigation-ui.version
+- META-INF/androidx.navigationevent_navigationevent-compose.version
+- META-INF/androidx.navigationevent_navigationevent.version
+- META-INF/androidx.profileinstaller_profileinstaller.version
+- META-INF/androidx.recyclerview_recyclerview.version
+- META-INF/androidx.room_room-ktx.version
+- META-INF/androidx.room_room-runtime.version
+- META-INF/androidx.savedstate_savedstate-compose.version
+- META-INF/androidx.savedstate_savedstate-ktx.version
+- META-INF/androidx.savedstate_savedstate.version
+- META-INF/androidx.slidingpanelayout_slidingpanelayout.version
+- META-INF/androidx.sqlite_sqlite-framework.version
+- META-INF/androidx.sqlite_sqlite.version
+- META-INF/androidx.startup_startup-runtime.version
+- META-INF/androidx.tracing_tracing.version
+- META-INF/androidx.transition_transition.version
+- META-INF/androidx.vectordrawable_vectordrawable-animated.version
+- META-INF/androidx.vectordrawable_vectordrawable.version
+- META-INF/androidx.versionedparcelable_versionedparcelable.version
+- META-INF/androidx.viewpager2_viewpager2.version
+- META-INF/androidx.viewpager_viewpager.version
+- META-INF/androidx.window_window-core.version
+- META-INF/androidx.window_window.version
+- META-INF/com.google.android.material_material.version
+- META-INF/com.google.dagger_dagger-lint-aar.version
+- META-INF/com.google.dagger_dagger.version
+- META-INF/com.google.dagger_hilt-android.version
+- META-INF/com.google.dagger_hilt-core.version
+- META-INF/kotlinx_coroutines_android.version
+- META-INF/kotlinx_coroutines_core.version
+- META-INF/kotlinx_coroutines_guava.version
+- META-INF/services/E6.a
+- META-INF/services/kotlinx.coroutines.z
+- m4a
+- assets/dexopt/baseline.prof
+- assets/dexopt/baseline.profm
+- png
+- webp
+isFrameworkApk: false
+packageInfo:
+  forcedPackageId: '127'
+  renameManifestPackage: null
+sdkInfo:
+  minSdkVersion: '33'
+  targetSdkVersion: '36'
+sharedLibrary: false
+sparseResources: false
+unknownFiles:
+  DebugProbesKt.bin: '8'
+  FileInfo.proto: '8'
+  LICENSE-junit.txt: '8'
+  app-update-ktx.properties: '8'
+  app-update.properties: '8'
+  bmd_cloud_api_file_v1_types.proto: '8'
+  bmd_cloud_api_file_v1_upload.proto: '8'
+  bmd_cloud_api_user_v1_types.proto: '8'
+  camera_control.proto: '8'
+  common.proto: '8'
+  core-common.properties: '8'
+  kotlin-tooling-metadata.json: '8'
+  main_messages.proto: '8'
+  media_sync.proto: '8'
+  play-services-base.properties: '8'
+  play-services-basement.properties: '8'
+  play-services-location.properties: '8'
+  play-services-tasks.properties: '8'
+  review-ktx.properties: '8'
+  review.properties: '8'
+  settings.proto: '8'
+  version.properties: '0'
+  stamp-cert-sha256: '8'
+  google/protobuf/any.proto: '8'
+  google/protobuf/api.proto: '8'
+  google/protobuf/descriptor.proto: '8'
+  google/protobuf/duration.proto: '8'
+  google/protobuf/empty.proto: '8'
+  google/protobuf/field_mask.proto: '8'
+  google/protobuf/source_context.proto: '8'
+  google/protobuf/struct.proto: '8'
+  google/protobuf/timestamp.proto: '8'
+  google/protobuf/type.proto: '8'
+  google/protobuf/wrappers.proto: '8'
+  junit/runner/logo.gif: '0'
+  junit/runner/smalllogo.gif: '0'
+usesFramework:
+  ids:
+  - 1
+  tag: null
+version: 2.7.0-dirty
+versionInfo:
+  versionCode: '109'
+  versionName: 3.3.2.0001

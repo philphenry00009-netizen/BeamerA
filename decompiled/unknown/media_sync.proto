@@ -1,0 +1,65 @@
+// Blackmagic Cam Application: Remote Control Media Sync Protocol
+// Version 1.0 (update `package` when bumping up version)
+//
+// This protocol is intended to be used over the initial WebSockets connection, using Binary Messages.
+// We assume that basics such as protocol compatibility were already checked by other means such as Bonjour TXT records.
+
+syntax = "proto3";
+
+option optimize_for = LITE_RUNTIME; // iOS protobufs-lite runtime is 1.7M vs 8.2M for full
+
+option swift_prefix = "CamAppMediaSync";
+package bmd.cam_app_media_sync.v1;
+
+message Clip {
+    string clip_id = 1; // An ID that identifies this clip. Given than a persistent UUID is not always available the recommeded format is "filename/creation_ts/size_bytes"
+    string file_name = 2;
+    uint64 size_bytes = 3;
+    uint32 runtime_secs = 4;
+    uint64 creation_ts = 5; // Milli-seconds since epoch (00:00:00 UTC on 1 January 1970)
+    optional bytes thumbnail_jpeg = 6; // See if ListClipsRequest.include_thumbnails
+}
+
+message ListClipsRequest {
+    optional uint64 cutoff_ts = 1; // Only clips recorded at or after this time will be returned. Milli-seconds since epoch (00:00:00 UTC on 1 January 1970)
+    repeated string clip_ids = 2; // Optional. In case the requester wants to receive updated information or is requesting thumbnails.
+    bool include_thumbnails = 3;
+}
+
+message ListClipsResponse {
+    repeated Clip clips = 1;
+}
+
+// Requester can send a single request for a full file, or for a portion of it
+message ClipDataStartRequest {
+    string clip_id = 1;
+    uint64 offset = 2;
+    uint64 size = 3;
+}
+
+message ClipDataStopRequest {
+    string clip_id = 1;
+}
+
+// Responder will send one or more ClipDataResponse to split the requested clip in manageable chunks (e.g. 64 KiB)
+message ClipDataResponse {
+    string clip_id = 1;
+    uint64 offset = 2;
+    bytes data = 3; // size is implicit. Chunk size is up to the sender.
+    uint32 data_crc32 = 4; // On failure the receiver can send ClipDataStopRequest + ClipDataStartRequest using the current offset
+}
+
+message Message {
+    oneof message {
+        ListClipsRequest list_clips_request = 1;
+        ListClipsResponse list_clips_response = 2;
+        ClipDataStartRequest clip_data_start_request = 4;
+        ClipDataStopRequest clip_data_stop_request = 5;
+        ClipDataResponse clip_data_response = 6;
+    }
+}
+
+// Top level message to be sent on the wire supports message aggregation
+message RootMessage {
+    repeated Message messages = 1;
+}

@@ -1,0 +1,573 @@
+syntax = "proto3";
+
+option optimize_for = LITE_RUNTIME;
+option swift_prefix = "CamAppControl";
+
+package bmd.cam_app_control.v5;
+
+import "common.proto";
+
+//
+// Initial handshake
+//
+
+message AppInfo {
+  string name = 1; // App name, e.g. "Blackmagic Cam"
+  string version = 2; // App version, e.g. "1.3"
+  AppPlatform platform = 3;
+  string platform_version = 4; // e.g. "17.1"
+  string device_model_name = 5; // e.g. "iPhone 14 Pro"
+  // IETF language code (e.g. "en", "pt-BR"). Messages received that contain text to be shown to the user (e.g.
+  // Settings labels) should be translated to this language.
+  string language_code = 6;
+  optional DebugInfo debug_info = 7;
+}
+
+enum AppPlatform {
+  APP_PLATFORM_UNSPECIFIED = 0;
+  APP_PLATFORM_IOS = 1;
+  APP_PLATFORM_ANDROID = 2;
+}
+
+message DebugInfo {
+  // Arbitrary string tags that can be used during development. Once decided they will stay then they should be
+  // specified properly in this proto message (e.g. is_heartbeat_disabled)
+  repeated string debug_tags = 1;
+
+  // Set to true indicating that hearbeat is disabled and the other end should also disable it. This is useful to
+  // allow for Xcode debugging without losing connection.
+  bool is_heartbeat_disabled = 2;
+}
+
+//
+// Subordinate Properties
+//
+
+// A camera is a lens + sensor combination
+message Camera {
+  string id = 1;
+  Lens lens = 2;
+
+  // Valid ranges. These may change when switching recording modes.
+  // TODO: Remove as we have properties now
+  uint32 white_balance_kelvin_min = 3; // e.g. 2500 Kelvin (CamWhiteBalanceRangeProperty)
+  uint32 white_balance_kelvin_max = 4; // e.g. 10000 Kelvin (CamWhiteBalanceRangeProperty)
+  int32 tint_min = 5; // e.g. -50 (CamTintRangeProperty)
+  int32 tint_max = 6; // e.g. 50 (CamTintRangeProperty)
+  uint32 sensibility_iso_min = 7; // e.g. 100 (CamSensibilityRangeProperty)
+  uint32 sensibility_iso_max = 8; // e.g. 3200 (CamSensibilityRangeProperty)
+  FrameRate frame_rate_min = 9; // e.g. 23 (CamFrameRateRangeProperty)
+  FrameRate frame_rate_max = 10; // e.g. 240 (CamFrameRateRangeProperty)
+  Shutter shutter_min = 11; // e.g. 1/24 (CamShutterRangeProperty)
+  Shutter shutter_max = 12; // e.g. 1/8000 (CamShutterRangeProperty)
+}
+
+message Lens {
+  LensType type = 1;
+  optional uint32 focal_length_mm = 2;
+  optional float optical_zoom_factor = 3; // e.g. 5 for "5x" zoom
+  optional float max_aperture = 4; // e.g. 1.8 for f/1.8 max aperture
+  float zoom_min = 5; // e.g. 1.0x
+  float zoom_max = 6; // e.g. 15.x
+  bool is_light_supported = 7;    // lens has torch or not
+  int32 light_max_strength_supported = 8;  // > 0 can set strength/intensity to the torch. Used to properly create a [0, 100] range
+  bool is_light_auto_supported = 9;   // Android does not have light auto capability
+}
+
+enum LensType {
+  LENS_TYPE_UNSPECIFIED = 0;
+  LENS_TYPE_BACK_WIDE = 1; // e.g. 0.5x 13mm-equivalent on iPhone
+  LENS_TYPE_BACK_MAIN = 2; // e.g. 1.0x 24mm-equivalent on iPhone
+  LENS_TYPE_BACK_TELE = 3; // e.g. 3.0x 77mm-equivalent on iPhone
+  LENS_TYPE_FRONT_MAIN = 4;
+  LENS_TYPE_BACK_WIDE_SECONDARY = 5; // e.g. 2.0x 48mm-equivalent on iPhone: "Wide angle camera's secondary optical zoom"
+  LENS_TYPE_BACK_TELE_SECONDARY = 6; // e.g. 8.0x 200mm-equivalent on iPhone
+  LENS_TYPE_FRONT_WIDE = 7;
+}
+
+//
+// Subordinate Read-only Properties:
+// - Can be read by the Controller with ReadPropertyRequest
+// - Can be proactively sent by the Subordinate when they change with PropertyChangedEvent
+//
+
+// PropertyId is used to referring to a property from ReadPropertyRequest
+enum PropertyId {
+  PROPERTY_ID_UNSPECIFIED = 0;
+  // Skip 1 value to match Property.oneof value
+  PROPERTY_ID_SLATE = 2;
+  PROPERTY_ID_BATTERY = 3;
+  PROPERTY_ID_ACTIVE_STORAGE = 4;
+  PROPERTY_ID_ACTIVE_CAM = 5;
+  PROPERTY_ID_CAM_FRAMERATE = 6;
+  PROPERTY_ID_CAM_SHUTTER = 7;
+  PROPERTY_ID_CAM_SENSIBILITY = 8;
+  PROPERTY_ID_CAM_EXPOSURE_COMP = 9;
+  PROPERTY_ID_CAM_WHITE_BALANCE = 10;
+  PROPERTY_ID_CAM_TINT = 11;
+  PROPERTY_ID_CAM_FOCUS = 12;
+  PROPERTY_ID_CAM_ZOOM = 13;
+  PROPERTY_ID_CAM_POINT_OF_INTEREST = 14;
+  PROPERTY_ID_CAM_ORIENTATION = 15;
+  PROPERTY_ID_CAM_STABILIZATION = 16;
+  PROPERTY_ID_CAM_FOCUS_MARKERS = 17;
+  PROPERTY_ID_RECORDING_STATE = 18;
+  PROPERTY_ID_RECORDING_FORMAT = 19;
+  PROPERTY_ID_STATE = 20;
+  PROPERTY_ID_CLOUD_STATE = 21;
+  PROPERTY_ID_AVAILABLE_CAMS = 22;
+  PROPERTY_ID_PREVIEW_VISIBILITY = 23;
+  PROPERTY_ID_AUDIO_SOURCE = 24;
+  PROPERTY_ID_CAM_WHITE_BALANCE_RANGE = 25;
+  PROPERTY_ID_CAM_TINT_RANGE = 26;
+  PROPERTY_ID_CAM_SENSIBILITY_RANGE = 27;
+  PROPERTY_ID_CAM_FRAME_RATE_RANGE = 28;
+  PROPERTY_ID_CAM_SHUTTER_RANGE = 29;
+  PROPERTY_ID_CAM_EXPOSURE_COMP_RANGE = 30;
+  PROPERTY_ID_CAM_APERTURE_VALUES = 31;
+  PROPERTY_ID_CAM_STABILIZATION_VALUES = 32;
+  PROPERTY_ID_CAM_APERTURE = 33;
+  PROPERTY_ID_CAM_FOCUS_RANGE = 34;
+  PROPERTY_ID_AVAILABLE_SETTINGS_PRESETS = 35;
+  PROPERTY_ID_SETTINGS_PRESET = 36;
+  PROPERTY_ID_CAM_ZOOM_TRANSITION = 37;
+  PROPERTY_ID_AVAILABLE_AUTO_EXPOSURE_PREFERENCES = 38;
+  PROPERTY_ID_CAM_AUTO_EXPOSURE_PREFERENCE = 39;
+  PROPERTY_ID_CAM_LIGHT = 40;
+  PROPERTY_ID_AVAILABLE_LUTS = 41;
+  PROPERTY_ID_LUT = 42;
+}
+
+message Property {
+  PropertyId id = 1;
+  // Choice MUST match PropertyId
+  oneof value {
+    SlateProperty slate = 2;
+    BatteryProperty battery = 3; // Read-only
+    ActiveStorageProperty active_storage = 4; // Read-only
+    ActiveCamProperty active_cam = 5;
+    CamFramerateProperty cam_framerate = 6;
+    CamShutterProperty cam_shutter = 7;
+    CamSensibilityProperty cam_sensibility = 8;
+    CamExposureCompProperty cam_exposure_comp = 9;
+    CamWhiteBalanceProperty cam_white_balance = 10;
+    CamTintProperty cam_tint = 11;
+    CamFocusProperty cam_focus = 12;
+    CamZoomProperty cam_zoom = 13;
+    CamPointOfInterestProperty cam_point_of_interest = 14;
+    CamOrientationProperty cam_orientation = 15; // Read-only
+    CamStabilizationProperty cam_stabilization = 16;
+    CamFocusMarkersProperty cam_focus_markers = 17;
+    RecordingStateProperty recording_state = 18; // Read-only
+    CamRecordingFormatProperty recording_format = 19; // Read-only
+    StateProperty state = 20; // Read-only
+    CloudStateProperty cloud_state = 21; // Read-only
+    AvailableCamsProperty available_cams = 22; // Read-only
+    PreviewVisibilityProperty preview_visibility = 23;
+    AudioSourceProperty audio_source = 24;
+    CamWhiteBalanceRangeProperty cam_white_balance_range = 25; // Read-only
+    CamTintRangeProperty cam_tint_range = 26; // Read-only
+    CamSensibilityRangeProperty cam_sensibility_range = 27; // Read-only
+    CamFrameRateRangeProperty cam_frame_rate_range = 28; // Read-only
+    CamShutterRangeProperty cam_shutter_range = 29; // Read-only
+    CamExposureCompRangeProperty cam_exposure_comp_range = 30; // Read-only
+    CamApertureValuesProperty cam_aperture_values = 31; // Read-only
+    CamStabilizationValuesProperty cam_stabilization_values = 32; // Read-only
+    CamApertureProperty cam_aperture = 33;
+    CamFocusRangeProperty cam_focus_range = 34; // Read-only
+    AvailableSettingsPresetsProperty available_settings_presets = 35;  // Read-only
+    SettingsPresetProperty settings_preset = 36;
+    CamZoomTransitionProperty cam_zoom_transition = 37;
+    AvailableAutoExposurePreferencesProperty available_auto_exposure_preferences = 38;  // Read-only
+    CamAutoExposurePreferenceProperty cam_auto_exposure_preference = 39;
+    CamLightProperty cam_light = 40;
+    AvailableLutsProperty available_luts = 41; // Read-only
+    LutProperty lut = 42;
+  }
+}
+
+// Read-only
+message BatteryProperty {
+  float available_percentage = 1;
+}
+
+// Read-only
+message ActiveStorageProperty {
+  StorageDevice storage_device = 1;
+}
+
+message StorageDevice {
+  string name = 1;
+  bool is_internal = 2;
+  uint64 total_size_bytes = 3;
+  uint64 free_size_bytes = 4;
+  uint64 runtime_secs = 5; // Number of seconds of recording runtime for the active recording format
+}
+
+message ActiveCamProperty {
+  string camera_id = 1; // Camera::id (selected camera, when using auto mode is the physical camera)
+  bool is_auto = 2;  // Auto mode changes: set to specify that we are enabling/disabling auto mode
+  // Indicates if this control is currently disabled/unavailable.
+  // When true, clients should not allow setting or changing this property.
+  bool is_disabled = 3;
+}
+
+enum TimelapseIntervalType {
+  TIMELAPSE_INTERVAL_TYPE_UNSPECIFIED = 0;
+  TIMELAPSE_INTERVAL_TYPE_FRAMES = 1;
+  TIMELAPSE_INTERVAL_TYPE_SECONDS = 2;
+  TIMELAPSE_INTERVAL_TYPE_MINUTES = 3;
+}
+
+message TimelapseInterval {
+  TimelapseIntervalType type = 1;
+  int32 count = 2;
+}
+
+message CamFramerateProperty {
+  FrameRate playback_frame_rate = 1;
+  bool is_off_speed_enabled = 2;
+  FrameRate off_speed_frame_rate = 3;
+  bool is_timelapse_recording = 4;
+  optional TimelapseInterval timelapse_interval = 5;
+}
+
+enum MeteringMode {
+  METERING_MODE_UNSPECIFIED = 0;
+  METERING_MODE_AUTO = 1; // Will keep updating automatically based on the scene.
+  METERING_MODE_MANUAL = 2; // Set by single-shot user action like AE/AF point. Other actions may change the value.
+  METERING_MODE_LOCKED = 3; // Fully locked. Should not change until unlocked.
+}
+
+message CamShutterProperty {
+  MeteringMode metering_mode = 1;
+  // Ignored when writing to this Property and metering_mode is Auto. Always sent when reading this Property.
+  optional Shutter shutter_speed = 2;
+  optional float shutter_angle = 3;
+}
+
+message CamSensibilityProperty {
+  MeteringMode metering_mode = 1;
+  // Ignored when writing to this Property and metering_mode is Auto. Always sent when reading this Property.
+  optional uint32 sensibility_iso = 2;
+}
+
+message CamExposureCompProperty {
+  MeteringMode metering_mode = 1;
+  // Ignored when writing to this Property and metering_mode is Auto. Always sent when reading this Property.
+  optional float exposure_comp_stops = 2;
+  bool is_exposure_bias_enabled = 3;
+}
+
+message CamWhiteBalanceProperty {
+  MeteringMode metering_mode = 1;
+  // Ignored when writing to this Property and metering_mode is Auto. Always sent when reading this Property.
+  optional uint32 white_balance_kelvin = 2;
+  // Indicates if this control is currently disabled/unavailable.
+  // When true, clients should not allow setting or changing this property.
+  bool is_disabled = 3;
+}
+
+message CamTintProperty {
+  MeteringMode metering_mode = 1;
+  // Ignored when writing to this Property and metering_mode is Auto. Always sent when reading this Property.
+  optional int32 tint = 2;
+}
+
+message CamFocusProperty {
+  bool is_auto = 1;
+  // Ignored when writing to this Property and is_auto. Always sent when reading this Property.
+  optional float focus_value = 2;
+  // Ignored when writing to this Property. When reading the Property it's set to true if the value set is not final,
+  // for example when transitioning between focus markers.
+  optional bool is_transitioning = 3;
+}
+
+message CamFocusMarkersProperty {
+  optional float transition_time_secs = 1;
+  // When writing to this Property all markers should be sent in this message, unset markers will be deleted.
+  optional float marker_1 = 2;
+  optional float marker_2 = 3;
+  optional float marker_3 = 4;
+  optional FocusMarkerTransitionMode transition_mode = 5;
+}
+
+enum FocusMarkerTransitionMode {
+  FOCUS_MARKER_TRANSITION_MODE_UNSPECIFIED = 0;
+  FOCUS_MARKER_TRANSITION_MODE_BOUNCE = 1; // Transition order: 1, 2, 3, 2, 1
+  FOCUS_MARKER_TRANSITION_MODE_CYCLE = 2; // Transition order: 1, 2, 3, 1, 2, 3
+}
+
+message CamZoomProperty {
+  float zoom_factor = 1; // <1 is not supported
+  // Indicates if this control is currently disabled/unavailable.
+  // When true, clients should not allow setting or changing this property.
+  bool is_disabled = 2;
+}
+
+message CamZoomTransitionProperty {
+  optional float transition_time_secs = 1;  // Transition time to be set
+}
+
+message CamPointOfInterestProperty {
+  PointOfInterestType type = 1;
+  optional PointF point = 2; // Normalized (0..1, 0..1). Unset means remove point of interest.
+}
+
+enum PointOfInterestType {
+  CAM_POE_TYPE_UNSPECIFIED = 0;
+  CAM_POE_TYPE_SINGLE_SHOT_AUTO_EXPOSURE = 1;
+  CAM_POE_TYPE_SINGLE_SHOT_AUTO_FOCUS = 2;
+  CAM_POE_TYPE_SINGLE_SHOT_AE_AF = 3;
+  CAM_POE_TYPE_LOCK_AE_AF = 4;
+  CAM_POE_TYPE_LOCK_WHITE_BALANCE = 5;
+}
+
+message CamStabilizationProperty {
+  StabilizationLevel level = 1;
+}
+
+enum StabilizationLevel {
+  STABILIZATION_LEVEL_UNSPECIFIED = 0;
+  STABILIZATION_LEVEL_OFF = 1;
+  STABILIZATION_LEVEL_STANDARD = 2;
+  STABILIZATION_LEVEL_CINEMATIC = 3;
+  STABILIZATION_LEVEL_EXTREME = 4;
+  STABILIZATION_LEVEL_OPTICAL = 5; // Android
+}
+
+// Only set fields should be updated
+message SlateProperty {
+  optional uint32 reel = 1;
+  optional string scene = 2;
+  optional uint32 take = 3;
+  optional SlateLight light = 4;
+  optional SlateTimeOfDay time_of_day = 5;
+  optional bool is_good_take_last_clip = 6;
+  optional string production_name = 7;
+  // We don't allow setting the camera name as it will be used during camera discovery
+  optional string director = 8;
+  optional string camera_operator = 9;
+  optional bool is_take_auto_increment_enabled = 10;
+}
+
+enum SlateLight {
+  SLATE_LIGHT_UNSPECIFIED = 0;
+  SLATE_LIGHT_INTERIOR = 1;
+  SLATE_LIGHT_EXTERIOR = 2;
+}
+
+enum SlateTimeOfDay {
+  SLATE_TIME_OF_DAY_UNSPECIFIED = 0;
+  SLATE_TIME_OF_DAY_DAY = 1;
+  SLATE_TIME_OF_DAY_NIGHT = 2;
+}
+
+// Read-only
+message CamOrientationProperty {
+  CamOrientation orientation = 1;
+  // "Stealth mode" (landscape video on portrait UI) happens when orientation is portrait and is_vertical_video_enabled == false
+  bool is_vertical_video_enabled = 2;
+}
+
+enum CamOrientation {
+  CAM_ORIENTATION_UNSPECIFIED = 0;
+  CAM_ORIENTATION_PORTRAIT = 1; // "Charger port down"
+  CAM_ORIENTATION_PORTRAIT_REVERSED = 2; // "Charger port up"
+  CAM_ORIENTATION_LANDSCAPE = 3; // "Charger port right"
+  CAM_ORIENTATION_LANDSCAPE_REVERSED = 4; // "Charger port left"
+}
+
+// Read-only
+message RecordingStateProperty {
+  bool is_recording = 1;
+  bool is_writing_to_storage = 2;
+
+  TimeCodeMode timecode_mode = 3;
+  TimeCode system_timecode = 4;
+  optional TimeCode recorded_duration = 5;
+  optional TimeCode tentacle_sync_timecode = 6;
+}
+
+enum TimeCodeMode {
+  TIME_CODE_MODE_UNSPECIFIED = 0;
+  TIME_CODE_MODE_RECORD_RUN = 1;
+  TIME_CODE_MODE_TIME_OF_DAY = 2;
+  TIME_CODE_MODE_TENTACLE_SYNC = 3;
+  TIME_CODE_MODE_PRO_DOCK = 4;
+}
+
+// Read-only
+message CamRecordingFormatProperty
+{
+  uint32 width = 1;
+  uint32 height = 2;
+  ColorSpace color_space = 3;
+  bool is_open_gate = 4;
+}
+
+enum ColorSpace {
+  COLOR_SPACE_UNSPECIFIED = 0;
+  COLOR_SPACE_REC709 = 1;
+  COLOR_SPACE_REC2020 = 2; // HDR
+  COLOR_SPACE_P3_D65 = 3;
+  COLOR_SPACE_APPLE_LOG = 4; // Apple
+  COLOR_SPACE_REC2020_HLG = 5; // Android
+  COLOR_SPACE_REC2020_HDR10_PLUS = 6; // Android
+  COLOR_SPACE_APPLE_LOG2 = 7; // Apple
+}
+
+// Read-only
+message StateProperty {
+  ControlMode control_mode = 1;
+}
+
+enum ControlMode {
+  CONTROL_MODE_UNSPECIFIED = 0;
+  CONTROL_MODE_MONITOR_ONLY = 1; // No messages that change the camera state are allowed (write property, start recording, etc.)
+  CONTROL_MODE_FULL_CONTROL = 2;
+}
+
+// Read-only
+message CloudStateProperty {
+  bool is_cloud_project = 1;
+  // The following will not be set if !is_cloud_project
+  optional string project_name = 2;
+  optional string clip_name = 3;
+  optional float upload_progress_percentage = 4;
+  optional float upload_speed_mbps = 5;
+  optional TimeCode upload_time_remaining = 6;
+}
+
+// Read-only
+message AvailableCamsProperty {
+  repeated Camera cameras = 1;
+  bool is_auto_supported = 2;
+}
+
+message PreviewVisibilityProperty {
+  PreviewVisibility preview_visibility = 1;
+  // Idea: optional UI element width/height hints
+}
+
+// Hints for the Controller to control the quality of the Audio/Video preview depending on whether it's being shown on
+// the Subordinate UI.
+enum PreviewVisibility {
+  PREVIEW_VISIBILITY_UNSPECIFIED = 0;
+  PREVIEW_VISIBILITY_FEATURED = 1; // Preview feed used as the main UI element
+  PREVIEW_VISIBILITY_NEXT_TO_FEATURED = 2; // Preview feed is not shown but it may be featured at any moment
+  PREVIEW_VISIBILITY_MULTIVIEW = 3; // Preview feed used in a multi-view grid
+  PREVIEW_VISIBILITY_HIDDEN = 4; // Preview feed is not being shown
+}
+
+message AudioSourceProperty {
+  string active_source_name = 1;
+  uint32 num_of_channels = 2; // Number of audio channels
+}
+
+message CamWhiteBalanceRangeProperty {
+  string camera_id = 1; // Camera::id
+  uint32 white_balance_kelvin_min = 2; // e.g. 2500 Kelvin
+  uint32 white_balance_kelvin_max = 3; // e.g. 10000 Kelvin
+}
+
+message CamTintRangeProperty {
+  string camera_id = 1; // Camera::id
+  int32 tint_min = 2; // e.g. -50
+  int32 tint_max = 3; // e.g. 50
+}
+
+message CamSensibilityRangeProperty {
+  string camera_id = 1; // Camera::id
+  uint32 sensibility_iso_min = 2; // e.g. 100
+  uint32 sensibility_iso_max = 3; // e.g. 3200
+}
+
+message CamFrameRateRangeProperty {
+  string camera_id = 1; // Camera::id
+  FrameRate frame_rate_min = 2; // e.g. 23
+  FrameRate frame_rate_max = 3; // e.g. 240
+  repeated FrameRate frame_rate_values = 4; // OPTIONAL: [23, 24, ..., 120, 240]
+}
+
+message CamShutterRangeProperty {
+  string camera_id = 1; // Camera::id
+  Shutter shutter_min = 2; // e.g. 1/24
+  Shutter shutter_max = 3; // e.g. 1/8000
+}
+
+message CamExposureCompRangeProperty {
+  string camera_id = 1; // Camera::id
+  float exposure_comp_stops_min = 2; // e.g. -3.0
+  float exposure_comp_stops_max = 3; // e.g. +3.0
+}
+
+message CamApertureValuesProperty {
+  string camera_id = 1; // Camera::id
+  repeated float apertures = 2; // Sorted list, e.g. [1.8, 3.6] for [f/1.8, f/3.6]
+}
+
+message CamStabilizationValuesProperty {
+  string camera_id = 1; // Camera::id
+  repeated StabilizationLevel stabilization_levels = 2;
+}
+
+message CamApertureProperty {
+  float aperture = 1; // e.g. 1.8 for f/1.8
+}
+
+message CamFocusRangeProperty {
+  string camera_id = 1; // Camera::id
+  float focus_min = 2; // e.g. 0.0f
+  float focus_max = 3; // e.g. 1.0f
+}
+
+message AvailableSettingsPresetsProperty {
+  repeated string available_presets = 1;  // list of preset names
+}
+
+message SettingsPresetProperty {
+  string current_preset = 1;                  // Preset which the action should be applied to (Read mode: currently enabled preset (SELECT))
+  optional SettingsPresetAction action = 2;   // Write only
+  optional string preset_new_name = 3;        // Write only - to be used with EDIT or CREATE action
+}
+
+enum SettingsPresetAction {
+  SETTINGS_PRESET_ACTION_UNSPECIFIED = 0;
+  SETTINGS_PRESET_ACTION_CREATE = 1;
+  SETTINGS_PRESET_ACTION_SELECT = 2;
+  SETTINGS_PRESET_ACTION_UPDATE = 3;
+  SETTINGS_PRESET_ACTION_EDIT = 4;
+  SETTINGS_PRESET_ACTION_DELETE = 5;
+}
+
+message AvailableAutoExposurePreferencesProperty {
+  repeated AutoExposurePreference available_auto_exposure_preferences = 1;
+}
+
+enum AutoExposurePreference {
+  AUTO_EXPOSURE_PREFERENCE_UNSPECIFIED = 0;
+  AUTO_EXPOSURE_PREFERENCE_SHUTTER = 1;
+  AUTO_EXPOSURE_PREFERENCE_ISO = 2;
+  AUTO_EXPOSURE_PREFERENCE_SHUTTER_AND_ISO = 3;
+}
+
+message CamAutoExposurePreferenceProperty {
+  AutoExposurePreference auto_exposure_preference = 1;
+}
+
+message CamLightProperty {
+  bool is_enabled = 1;
+  optional bool is_auto = 2;
+  optional uint32 light_value = 3;    // 0-100 range
+}
+
+message AvailableLutsProperty {
+  repeated string available_luts = 1;
+}
+
+message LutProperty {
+  string selected_lut = 1;  // lut name. Empty if none selected
+  bool is_display_lut = 2;
+  bool is_record_lut = 3;
+}
