@@ -2323,10 +2323,6 @@
     <public type="color" name="mtrl_outlined_stroke_color" id="0x7f06039f" />
     <public type="color" name="mtrl_popupmenu_overlay_color" id="0x7f0603a0" />
     <public type="color" name="mtrl_scrim_color" id="0x7f0603a1" />
-    <public type="color" name="mtrl_switch_thumb_icon_tint" id="0x7f0603a2" />
-    <public type="color" name="mtrl_switch_thumb_tint" id="0x7f0603a3" />
-    <public type="color" name="mtrl_switch_track_decoration_tint" id="0x7f0603a4" />
-    <public type="color" name="mtrl_switch_track_tint" id="0x7f0603a5" />
     <public type="color" name="mtrl_tabs_colored_ripple_color" id="0x7f0603a6" />
     <public type="color" name="mtrl_tabs_icon_color_selector" id="0x7f0603a7" />
     <public type="color" name="mtrl_tabs_icon_color_selector_colored" id="0x7f0603a8" />
@@ -3382,12 +3378,6 @@
     <public type="dimen" name="mtrl_snackbar_margin" id="0x7f0703fc" />
     <public type="dimen" name="mtrl_snackbar_message_margin_horizontal" id="0x7f0703fd" />
     <public type="dimen" name="mtrl_snackbar_padding_horizontal" id="0x7f0703fe" />
-    <public type="dimen" name="mtrl_switch_text_padding" id="0x7f0703ff" />
-    <public type="dimen" name="mtrl_switch_thumb_elevation" id="0x7f070400" />
-    <public type="dimen" name="mtrl_switch_thumb_icon_size" id="0x7f070401" />
-    <public type="dimen" name="mtrl_switch_thumb_size" id="0x7f070402" />
-    <public type="dimen" name="mtrl_switch_track_height" id="0x7f070403" />
-    <public type="dimen" name="mtrl_switch_track_width" id="0x7f070404" />
     <public type="dimen" name="mtrl_textinput_box_corner_radius_medium" id="0x7f070405" />
     <public type="dimen" name="mtrl_textinput_box_corner_radius_small" id="0x7f070406" />
     <public type="dimen" name="mtrl_textinput_box_label_cutout_padding" id="0x7f070407" />
@@ -3435,28 +3425,6 @@
     <public type="dimen" name="tooltip_vertical_padding" id="0x7f070431" />
     <public type="dimen" name="tooltip_y_offset_non_touch" id="0x7f070432" />
     <public type="dimen" name="tooltip_y_offset_touch" id="0x7f070433" />
-    <public type="drawable" name="$mtrl_switch_thumb_checked_pressed__0" id="0x7f080021" />
-    <public type="drawable" name="$mtrl_switch_thumb_checked_unchecked__0" id="0x7f080022" />
-    <public type="drawable" name="$mtrl_switch_thumb_checked_unchecked__1" id="0x7f080023" />
-    <public type="drawable" name="$mtrl_switch_thumb_pressed_checked__0" id="0x7f080024" />
-    <public type="drawable" name="$mtrl_switch_thumb_pressed_unchecked__0" id="0x7f080025" />
-    <public type="drawable" name="$mtrl_switch_thumb_unchecked_checked__0" id="0x7f080026" />
-    <public type="drawable" name="$mtrl_switch_thumb_unchecked_checked__1" id="0x7f080027" />
-    <public type="drawable" name="$mtrl_switch_thumb_unchecked_pressed__0" id="0x7f080028" />
-    <public type="drawable" name="$organisation_default__0" id="0x7f080029" />
-    <public type="drawable" name="$organisation_default__1" id="0x7f08002a" />
-    <public type="drawable" name="$play_speed_empty__0" id="0x7f08002b" />
-    <public type="drawable" name="$play_speed_empty__1" id="0x7f08002c" />
-    <public type="drawable" name="$play_speed_empty__2" id="0x7f08002d" />
-    <public type="drawable" name="$play_speed_empty__3" id="0x7f08002e" />
-    <public type="drawable" name="$syncing_and_recording__0" id="0x7f08002f" />
-    <public type="drawable" name="$wb_shady__0" id="0x7f080030" />
-    <public type="drawable" name="$wn_enhanced_lens_control__0" id="0x7f080031" />
-    <public type="drawable" name="$wn_new_creative_luts__0" id="0x7f080032" />
-    <public type="drawable" name="$wn_new_creative_luts__1" id="0x7f080033" />
-    <public type="drawable" name="$wn_new_creative_luts__2" id="0x7f080034" />
-    <public type="drawable" name="$wn_new_creative_luts__3" id="0x7f080035" />
-    <public type="drawable" name="$wn_new_creative_luts__4" id="0x7f080036" />
     <public type="drawable" name="$zebra__0" id="0x7f080037" />
     <public type="drawable" name="$zoom_8x_2__0" id="0x7f080038" />
     <public type="drawable" name="abc_action_bar_item_background_material" id="0x7f08003a" />
@@ -3731,18 +3699,6 @@
     <public type="drawable" name="mtrl_navigation_bar_item_background" id="0x7f0801a0" />
     <public type="drawable" name="mtrl_popupmenu_background" id="0x7f0801a1" />
     <public type="drawable" name="mtrl_popupmenu_background_overlay" id="0x7f0801a2" />
-    <public type="drawable" name="mtrl_switch_thumb" id="0x7f0801a3" />
-    <public type="drawable" name="mtrl_switch_thumb_checked" id="0x7f0801a4" />
-    <public type="drawable" name="mtrl_switch_thumb_checked_pressed" id="0x7f0801a5" />
-    <public type="drawable" name="mtrl_switch_thumb_checked_unchecked" id="0x7f0801a6" />
-    <public type="drawable" name="mtrl_switch_thumb_pressed" id="0x7f0801a7" />
-    <public type="drawable" name="mtrl_switch_thumb_pressed_checked" id="0x7f0801a8" />
-    <public type="drawable" name="mtrl_switch_thumb_pressed_unchecked" id="0x7f0801a9" />
-    <public type="drawable" name="mtrl_switch_thumb_unchecked" id="0x7f0801aa" />
-    <public type="drawable" name="mtrl_switch_thumb_unchecked_checked" id="0x7f0801ab" />
-    <public type="drawable" name="mtrl_switch_thumb_unchecked_pressed" id="0x7f0801ac" />
-    <public type="drawable" name="mtrl_switch_track" id="0x7f0801ad" />
-    <public type="drawable" name="mtrl_switch_track_decoration" id="0x7f0801ae" />
     <public type="drawable" name="mtrl_tabs_default_indicator" id="0x7f0801af" />
     <public type="drawable" name="multiivew_return" id="0x7f0801b0" />
     <public type="drawable" name="multiview_cam_2" id="0x7f0801b1" />
@@ -3786,11 +3742,9 @@
     <public type="drawable" name="notification_tile_bg" id="0x7f0801dc" />
     <public type="drawable" name="off_speed" id="0x7f0801de" />
     <public type="drawable" name="off_speed_active" id="0x7f0801df" />
-    <public type="drawable" name="organisation_default" id="0x7f0801e0" />
     <public type="drawable" name="outline_circle" id="0x7f0801e1" />
     <public type="drawable" name="pause" id="0x7f0801e2" />
     <public type="drawable" name="play" id="0x7f0801e3" />
-    <public type="drawable" name="play_speed_empty" id="0x7f0801e4" />
     <public type="drawable" name="presets_add" id="0x7f0801e5" />
     <public type="drawable" name="presets_delete" id="0x7f0801e6" />
     <public type="drawable" name="presets_edit" id="0x7f0801e7" />
@@ -3856,7 +3810,6 @@
     <public type="drawable" name="sync_sidebar_complete" id="0x7f080223" />
     <public type="drawable" name="sync_thumbnail" id="0x7f080224" />
     <public type="drawable" name="sync_warning_overlay" id="0x7f080225" />
-    <public type="drawable" name="syncing_and_recording" id="0x7f080226" />
     <public type="drawable" name="tc_external" id="0x7f080227" />
     <public type="drawable" name="tc_gen" id="0x7f080228" />
     <public type="drawable" name="tc_internal" id="0x7f080229" />
@@ -3882,7 +3835,6 @@
     <public type="drawable" name="user" id="0x7f08023d" />
     <public type="drawable" name="wb_cloudy" id="0x7f08023e" />
     <public type="drawable" name="wb_flourescent" id="0x7f08023f" />
-    <public type="drawable" name="wb_shady" id="0x7f080240" />
     <public type="drawable" name="wb_sunny" id="0x7f080241" />
     <public type="drawable" name="wb_tungsten" id="0x7f080242" />
     <public type="drawable" name="wn_1" id="0x7f080243" />
@@ -3890,10 +3842,7 @@
     <public type="drawable" name="wn_3" id="0x7f080245" />
     <public type="drawable" name="wn_4" id="0x7f080246" />
     <public type="drawable" name="wn_custom_function_buttons" id="0x7f080247" />
-    <public type="drawable" name="wn_enhanced_lens_control" id="0x7f080248" />
-    <public type="drawable" name="wn_enhanced_tools" id="0x7f080249" />
     <public type="drawable" name="wn_live_stream" id="0x7f08024a" />
-    <public type="drawable" name="wn_new_creative_luts" id="0x7f08024b" />
     <public type="drawable" name="wn_remote_clip_syncing" id="0x7f08024c" />
     <public type="drawable" name="zebra" id="0x7f08024d" />
     <public type="drawable" name="zoom" id="0x7f08024e" />
@@ -4589,14 +4538,6 @@
     <public type="integer" name="mtrl_card_anim_delay_ms" id="0x7f0b003c" />
     <public type="integer" name="mtrl_card_anim_duration_ms" id="0x7f0b003d" />
     <public type="integer" name="mtrl_chip_anim_duration" id="0x7f0b003e" />
-    <public type="integer" name="mtrl_switch_thumb_motion_duration" id="0x7f0b003f" />
-    <public type="integer" name="mtrl_switch_thumb_post_morphing_duration" id="0x7f0b0040" />
-    <public type="integer" name="mtrl_switch_thumb_pre_morphing_duration" id="0x7f0b0041" />
-    <public type="integer" name="mtrl_switch_thumb_pressed_duration" id="0x7f0b0042" />
-    <public type="integer" name="mtrl_switch_thumb_viewport_center_coordinate" id="0x7f0b0043" />
-    <public type="integer" name="mtrl_switch_thumb_viewport_size" id="0x7f0b0044" />
-    <public type="integer" name="mtrl_switch_track_viewport_height" id="0x7f0b0045" />
-    <public type="integer" name="mtrl_switch_track_viewport_width" id="0x7f0b0046" />
     <public type="integer" name="mtrl_tab_indicator_anim_duration_ms" id="0x7f0b0047" />
     <public type="integer" name="mtrl_view_gone" id="0x7f0b0048" />
     <public type="integer" name="mtrl_view_invisible" id="0x7f0b0049" />
@@ -5467,14 +5408,6 @@
     <public type="string" name="mtrl_picker_toggle_to_year_selection" id="0x7f1202b7" />
     <public type="string" name="mtrl_picker_toggled_to_day_selection" id="0x7f1202b8" />
     <public type="string" name="mtrl_picker_toggled_to_year_selection" id="0x7f1202b9" />
-    <public type="string" name="mtrl_switch_thumb_group_name" id="0x7f1202ba" />
-    <public type="string" name="mtrl_switch_thumb_path_checked" id="0x7f1202bb" />
-    <public type="string" name="mtrl_switch_thumb_path_morphing" id="0x7f1202bc" />
-    <public type="string" name="mtrl_switch_thumb_path_name" id="0x7f1202bd" />
-    <public type="string" name="mtrl_switch_thumb_path_pressed" id="0x7f1202be" />
-    <public type="string" name="mtrl_switch_thumb_path_unchecked" id="0x7f1202bf" />
-    <public type="string" name="mtrl_switch_track_decoration_path" id="0x7f1202c0" />
-    <public type="string" name="mtrl_switch_track_path" id="0x7f1202c1" />
     <public type="string" name="mtrl_timepicker_cancel" id="0x7f1202c2" />
     <public type="string" name="mtrl_timepicker_confirm" id="0x7f1202c3" />
     <public type="string" name="multiple_remote_cameras_do_not_support_setting_to_" id="0x7f1202c4" />
