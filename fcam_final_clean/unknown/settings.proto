@@ -1,0 +1,97 @@
+// Messages to change Subordinate application Settings
+
+syntax = "proto3";
+
+option optimize_for = LITE_RUNTIME;
+option swift_prefix = "CamAppControl";
+
+package bmd.cam_app_control.v5;
+
+//
+// Description of Settings: sent from the Subordinate to the Controller
+// NOTE: Labels should be translated when possible based on the Controller language sent on AppInfo
+//
+
+message AvailableSettings {
+  repeated SettingsSection sections = 1;
+}
+
+message SettingsSection {
+  string label = 1; // Translated to Controller language
+  repeated SettingDescription settings_descriptions = 2;
+}
+
+message SettingDescription {
+  string setting_key = 1;
+  string label = 2; // Translated to Controller language
+  bool is_disabled = 3; // When true always show as disabled (e.g. Remote Control settings as per UX spec)
+
+  // Optionally hide or disable this setting based on the value(s) of another setting
+  optional SettingDependentType dependent_type = 4;
+  repeated WriteSetting dependent_settings = 5;
+
+  oneof setting {
+    ComboBoxSetting combo_box = 6;
+    CheckBoxSetting check_box = 7;
+    // A non-interactive (read-only) label with an optional URL link (e.g. "Learn more at blackmagicdesign.com")
+    LinkLabelSetting link_label = 8;
+    // A non-interactive (read-only) label that is split in a key and a value (e.g. "App Version", "1.3.3")
+    KeyValueLabelSetting key_value_label = 9;
+  }
+}
+
+enum SettingDependentType {
+  COMBO_BOX_DEPENDENT_TYPE_UNSPECIFIED = 0;
+  COMBO_BOX_DEPENDENT_TYPE_DISABLE = 1;
+  COMBO_BOX_DEPENDENT_TYPE_HIDE = 2;
+}
+
+message ComboBoxSetting {
+  repeated ComboBoxOption options = 1;
+  string selected_option_key = 2; // Current value
+  string default_option_key = 3; // Default value
+}
+
+message ComboBoxOption {
+  string key = 1;
+  string label = 2; // Translated to Controller language
+
+  // Optionally hide or disable this option based on the value(s) of another setting
+  optional SettingDependentType dependent_type = 3;
+  repeated WriteSetting dependent_settings = 4;
+}
+
+message CheckBoxSetting {
+  bool is_set = 1; // Current value
+  bool default_is_set = 2; // Default value
+}
+
+message LinkLabelSetting {
+  string label = 1; // Translated to Controller language
+  optional string url = 2;
+}
+
+message KeyValueLabelSetting {
+  string key_label = 1; // Translated to Controller language
+  string value_label = 2; // Translated to Controller language
+}
+
+//
+// Changing of Settings: sent from the Controller to the Subordinate
+//
+
+message WriteSetting {
+  string setting_key = 1;
+  oneof value {
+    ComboBoxValue combo_box = 2;
+    CheckBoxValue check_box = 3;
+  }
+}
+
+message ComboBoxValue {
+  string selected_option_key = 1;
+}
+
+message CheckBoxValue {
+  bool is_set = 1;
+}

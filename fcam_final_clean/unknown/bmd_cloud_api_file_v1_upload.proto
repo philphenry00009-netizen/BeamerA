@@ -1,0 +1,252 @@
+syntax = "proto3";
+
+package bmd.cloud.api.file.v1;
+
+import "bmd_cloud_api_file_v1_types.proto";
+import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_package = "com.blackmagicdesign.android.cloud.protobuf";
+
+message UploadTarget {
+    oneof target {
+        // Path of file to be updated/created
+        string full_path = 1;
+
+        // Parent dir and name of file to be created
+        RelativePath relative_path = 2;
+
+        // ID of the file to be updated
+        string inode_id = 3;
+
+        // Upload key of the attribute to written
+        string pending_attribute = 4;
+    }
+}
+
+message UploadRequestIOVec {
+    // The number of bytes of data following this message
+    uint32 size = 1;
+
+    // The offset within a file this data is to be written to
+    uint64 offset = 2;
+}
+
+message UploadRequestWriteFile {
+    // The file/attribute to be written
+    UploadTarget target = 1;
+
+    // Size of the file to be uploaded
+    uint64 size = 2;
+
+    // Chunk size of the file. Can only be set when creating a new file (optional)
+    optional uint32 chunk_size = 3;
+
+    // Expected latest version of the file when starting upload (optional)
+    optional uint32 expected_version = 4;
+
+    // sha256 hash of the chunk hashes used to verify the upload (optional)
+    SHA256 hash_of_hashes = 5;
+
+    // Client timestamps
+    google.protobuf.Timestamp client_created_at = 6;
+    google.protobuf.Timestamp client_modified_at = 7;
+
+    // Attributes to set on the file (optional)
+    map<string, Attribute> attributes = 8;
+}
+
+message UploadRequestPatchFile {
+    // The file/attribute to be written
+    UploadTarget target = 1;
+
+    // Size of the file to be uploaded
+    uint64 size = 2;
+
+    // The version of the file to be patched, which can be a historical version (optional)
+    // If omitted, a new sparse file will be created
+    uint32 base_version = 3;
+
+    // Expected latest version of the file when starting upload (optional)
+    optional uint32 expected_version = 4;
+
+    // sha256 hash of the chunk hashes used to verify the upload (optional)
+    SHA256 hash_of_hashes = 5;
+
+    // Client timestamps
+    google.protobuf.Timestamp client_created_at = 6;
+    google.protobuf.Timestamp client_modified_at = 7;
+
+     // Attributes to set on the file (optional)
+    map<string, Attribute> attributes = 8;
+
+    // Byte ranges to be uploaded
+    repeated UploadRequestIOVec iovec = 9;
+
+    // Chunk size of the file. Can only be set when creating a new file (optional)
+    // Ignored if base_version is set
+    optional uint32 chunk_size = 10;
+}
+
+message UploadRequestStartSession {
+    // The file/attribute to be written
+    UploadTarget target = 1;
+
+    // Size of the file to be uploaded
+    uint64 size = 2;
+
+    // Chunk size of the file. Can only be set when creating a new file (optional)
+    optional uint32 chunk_size = 3;
+
+    // Expected latest version of the file when starting upload (optional)
+    optional uint32 expected_version = 4;
+
+    // Client timestamps
+    google.protobuf.Timestamp client_created_at = 5;
+    google.protobuf.Timestamp client_modified_at = 6;
+
+    // Attributes to set on the file (optional)
+    map<string, Attribute> attributes = 7;
+
+    // Byte ranges to be uploaded
+    repeated UploadRequestIOVec iovec = 8;
+
+    // Size of the parts this file will be uploaded in (min 5MB)
+    // All parts except the last must be this size
+    uint32 part_size = 9;
+}
+
+message UploadRequestStartPatchSession {
+    // The file/attribute to be written
+    UploadTarget target = 1;
+
+    // Size of the file to be uploaded
+    uint64 size = 2;
+
+    // The version of the file to be patched, which can be a historical version (optional)
+    // If omitted, a new sparse file will be created
+    uint32 base_version = 3;
+
+    // Expected latest version of the file when starting upload (optional)
+    optional uint32 expected_version = 4;
+
+    // Client timestamps
+    google.protobuf.Timestamp client_created_at = 5;
+    google.protobuf.Timestamp client_modified_at = 6;
+
+    // Attributes to set on the file (optional)
+    map<string, Attribute> attributes = 7;
+
+    // Byte ranges to be uploaded
+    repeated UploadRequestIOVec iovec = 9;
+
+    // Chunk size of the file. Can only be set when creating a new file (optional)
+    // Ignored if base_version is set
+    optional uint32 chunk_size = 10;
+}
+
+message UploadRequestWriteSession {
+    // ID of the session to upload data to
+    string session = 1;
+
+    // Byte ranges to be uploaded
+    repeated UploadRequestIOVec iovec = 2;
+}
+
+message UploadRequestEndSession {
+    // ID of the session to upload data to
+    string session = 1;
+
+    // sha256 hash of the chunk hashes used to verify the upload (optional)
+    SHA256 hash_of_hashes = 2;
+
+    // Attributes to set on the file (optional)
+    map<string, Attribute> attributes = 3;
+}
+
+message UploadRequest {
+    // Client specified ID to align response messages within a single request
+    uint32 message_id = 1;
+
+    oneof message {
+        // Upload a whole file in one go
+        UploadRequestWriteFile write_file = 2;
+
+        // Upload parts of an existing file
+        UploadRequestPatchFile patch_file = 3;
+
+        // Start an upload session to be used across multiple HTTP requests
+        UploadRequestStartSession start_session = 4;
+
+        // Start an patch upload session to be used across multiple HTTP requests
+        UploadRequestStartPatchSession start_patch_session = 5;
+
+        // Write bytes to an upload session
+        UploadRequestWriteSession write_session = 6;
+
+        // End an upload session
+        UploadRequestEndSession end_session = 7;
+    }
+}
+
+message UploadResponseSession {
+    // ID of the session to upload data to
+    string session = 1;
+
+    // The file/attribute to be written
+    UploadTarget target = 2;
+
+    // Size of the file being uploaded
+    uint64 size = 3;
+
+    // Attributes to be set on the file when upload completes
+    map<string, string> pending_attributes = 4;
+
+    // The expected version of the existing file to be replaced
+    optional uint32 expected_version = 5;
+
+    // True if this is a patch session
+    bool patch = 6;
+
+    // The size of the upload parts used by this session. Only set if patch is false
+    uint32 part_size = 7;
+
+    // The version the patch is applied to. Only set if patch is true
+    uint32 base_version = 8;
+}
+
+message UploadResponseOK {
+}
+
+message UploadResponseINode {
+    INodeInfo metadata = 1;
+
+    // Session IDs of pending file attributes that are waiting to be uploaded
+	map<string, string> pending_attributes = 2;
+}
+
+message UploadResponseError {
+    // Error code
+    string error_code = 1;
+
+    // Descriptive error message
+    string error_message = 2;
+
+    // Trace ID to help align with server-side logs (optional)
+    string trace_id = 3;
+
+    // Any error detail attachments
+    repeated google.protobuf.Any details = 4;
+}
+
+message UploadResponse {
+    // Client specified ID to align response messages within a single request
+    uint32 message_id = 1;
+
+    oneof message {
+        UploadResponseOK ok = 2;
+        UploadResponseError error = 3;
+        UploadResponseSession session = 4;
+        UploadResponseINode inode = 5;
+    }
+}

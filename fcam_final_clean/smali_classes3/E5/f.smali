@@ -1,0 +1,64 @@
+.class public final LE5/f;
+.super Ljava/lang/Object;
+.source "SourceFile"
+
+
+# static fields
+.field public static b:LE5/f;
+
+
+# instance fields
+.field public final a:Ljava/lang/Object;
+
+
+# direct methods
+.method public constructor <init>()V
+    .locals 3
+
+    .line 1
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    .line 2
+    new-instance v0, Ljava/lang/Object;
+
+    invoke-direct {v0}, Ljava/lang/Object;-><init>()V
+
+    iput-object v0, p0, LE5/f;->a:Ljava/lang/Object;
+
+    .line 3
+    new-instance v0, Landroid/os/Handler;
+
+    .line 4
+    invoke-static {}, Landroid/os/Looper;->getMainLooper()Landroid/os/Looper;
+
+    move-result-object v1
+
+    new-instance v2, LE5/e;
+
+    invoke-direct {v2, p0}, LE5/e;-><init>(LE5/f;)V
+
+    invoke-direct {v0, v1, v2}, Landroid/os/Handler;-><init>(Landroid/os/Looper;Landroid/os/Handler$Callback;)V
+
+    return-void
+.end method
+
+.method public constructor <init>(Ljava/lang/Object;)V
+    .locals 0
+
+    .line 5
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    iput-object p1, p0, LE5/f;->a:Ljava/lang/Object;
+
+    return-void
+.end method
+
+
+# virtual methods
+.method public a()Ljava/lang/Object;
+    .locals 0
+
+    iget-object p0, p0, LE5/f;->a:Ljava/lang/Object;
+
+    return-object p0
+.end method

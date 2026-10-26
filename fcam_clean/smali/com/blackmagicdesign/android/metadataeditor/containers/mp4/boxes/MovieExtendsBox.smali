@@ -1,0 +1,39 @@
+.class public Lcom/blackmagicdesign/android/metadataeditor/containers/mp4/boxes/MovieExtendsBox;
+.super Lcom/blackmagicdesign/android/metadataeditor/containers/mp4/boxes/NodeBox;
+.source "SourceFile"
+
+
+# direct methods
+.method public constructor <init>(Lcom/blackmagicdesign/android/metadataeditor/containers/mp4/boxes/Header;)V
+    .locals 0
+
+    invoke-direct {p0, p1}, Lcom/blackmagicdesign/android/metadataeditor/containers/mp4/boxes/NodeBox;-><init>(Lcom/blackmagicdesign/android/metadataeditor/containers/mp4/boxes/Header;)V
+
+    return-void
+.end method
+
+.method public static createMovieExtendsBox()Lcom/blackmagicdesign/android/metadataeditor/containers/mp4/boxes/MovieExtendsBox;
+    .locals 3
+
+    new-instance v0, Lcom/blackmagicdesign/android/metadataeditor/containers/mp4/boxes/MovieExtendsBox;
+
+    new-instance v1, Lcom/blackmagicdesign/android/metadataeditor/containers/mp4/boxes/Header;
+
+    invoke-static {}, Lcom/blackmagicdesign/android/metadataeditor/containers/mp4/boxes/MovieExtendsBox;->fourcc()Ljava/lang/String;
+
+    move-result-object v2
+
+    invoke-direct {v1, v2}, Lcom/blackmagicdesign/android/metadataeditor/containers/mp4/boxes/Header;-><init>(Ljava/lang/String;)V
+
+    invoke-direct {v0, v1}, Lcom/blackmagicdesign/android/metadataeditor/containers/mp4/boxes/MovieExtendsBox;-><init>(Lcom/blackmagicdesign/android/metadataeditor/containers/mp4/boxes/Header;)V
+
+    return-object v0
+.end method
+
+.method public static fourcc()Ljava/lang/String;
+    .locals 1
+
+    const-string v0, "mvex"
+
+    return-object v0
+.end method
