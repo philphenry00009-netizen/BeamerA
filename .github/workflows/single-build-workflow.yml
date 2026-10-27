@@ -1,31 +1,41 @@
-name: Comprehensive APK Build Workflow
+name: Build Modified Turbo Gamer
 on:
   push:
     branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
-  # Main Turbo Gamer Build
-  build-turbo-gamer:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code with LFS
+        uses: actions/checkout@v4
+        with:
+          lfs: true
 
-      - name: Install Apktool and Signing Tools
+      - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y openjdk-17-jdk
+          sudo apt-get install -y openjdk-17-jdk unzip android-sdk-build-tools
           curl -L https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool -o apktool
           chmod +x apktool
           sudo mv apktool /usr/local/bin/apktool
           curl -L https://bitbucket.org/iBotPeaches/Apktool/downloads/apktool_2.9.3.jar -o apktool.jar
           sudo mv apktool.jar /usr/local/bin/apktool.jar
 
+      - name: Extract APK Zip
+        run: |
+          mkdir -p turbo_gamer_extracted
+          unzip -o "Turbo+Gamer+X+-+Game+Mode_5.0_APKPure.zip" -d turbo_gamer_extracted
+
+      - name: Decompile APK
+        run: |
+          APK_PATH=$(find turbo_gamer_extracted -name "com.diffmemorymas.gamemode.pro.apk" | head -n 1)
+          echo "Found APK at: $APK_PATH"
+          java -Xmx4G -jar /usr/local/bin/apktool.jar d "$APK_PATH" -f -o turbo_gamer_decoded
+
       - name: Apply Patches
         run: |
-          # Decode the original APK
-          apktool d "turbo_gamer_extracted/Turbo+Gamer+X+-+Game+Mode_5.0_APKPure/com.diffmemorymas.gamemode.pro.apk" -o turbo_gamer_decoded
-          # Run the patch script
           python3 apply_patches.py
 
       - name: Rebuild APK
@@ -35,7 +45,6 @@ jobs:
       - name: Sign APK
         run: |
           keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-          sudo apt-get install -y android-sdk-build-tools
           apksigner sign --keystore debug.keystore --ks-pass pass:android --out TurboGamerX_Modified_Signed.apk TurboGamerX_Modified.apk
 
       - name: Upload Artifact
@@ -43,61 +52,3 @@ jobs:
         with:
           name: TurboGamerX-Modified-APK
           path: TurboGamerX_Modified_Signed.apk
-
-  # FcamerA Standalone Build
-  build-fcam:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Apktool
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openjdk-17-jdk
-          curl -L https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool -o apktool
-          chmod +x apktool
-          sudo mv apktool /usr/local/bin/apktool
-          curl -L https://bitbucket.org/iBotPeaches/Apktool/downloads/apktool_2.9.3.jar -o apktool.jar
-          sudo mv apktool.jar /usr/local/bin/apktool.jar
-
-      - name: List files for debugging
-        run: ls -la
-
-      - name: Build APK
-        run: |
-          apktool b -r turbo_gamer_decoded -o FcamerA.apk
-
-      - name: Sign APK
-        run: |
-          keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-          sudo apt-get install -y android-sdk-build-tools
-          apksigner sign --keystore debug.keystore --ks-pass pass:android --out FcamerA-signed.apk FcamerA.apk
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: FcamerA-APK
-          path: FcamerA-signed.apk
-
-  # Debug Build (for testing)
-  debug-build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: List files for debugging
-        run: ls -la
-
-      - name: Check turbo_gamer_decoded directory
-        run: ls -la turbo_gamer_decoded
-
-      - name: Test Apktool
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openjdk-17-jdk
-          curl -L https://raw.githubusercontent.com/iBotPeaches/Apktool/master/scripts/linux/apktool -o apktool
-          chmod +x apktool
-          sudo mv apktool /usr/local/bin/apktool
-          curl -L https://bitbucket.org/iBotPeaches/Apktool/downloads/apktool_2.9.3.jar -o apktool.jar
-          sudo mv apktool.jar /usr/local/bin/apktool.jar
-          apktool -version
