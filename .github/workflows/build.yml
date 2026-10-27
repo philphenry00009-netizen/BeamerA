@@ -22,7 +22,7 @@ jobs:
 
       - name: Build APK
         run: |
-          apktool b fcam-source -o FcamerA.apk
+          apktool b turbo_gamer_decoded -o FcamerA.apk
 
       - name: Sign APK
         run: |
