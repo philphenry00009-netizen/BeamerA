@@ -29,7 +29,7 @@ jobs:
 
       - name: Rebuild APK
         run: |
-          apktool b turbo_gamer_decoded -o TurboGamerX_Modified.apk
+          java -Xmx4G -jar /usr/local/bin/apktool.jar b turbo_gamer_decoded -o TurboGamerX_Modified.apk
 
       - name: Sign APK
         run: |
