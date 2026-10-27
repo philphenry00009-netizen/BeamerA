@@ -10,17 +10,25 @@ def patch_main_service(smali_path):
         print("Error: runShellWithShizuku not found!")
         return False
 
+    # Remove existing nuclearAction if present to avoid duplication
+    if '.method public nuclearAction(I)V' in content:
+        pattern = r'\.method public nuclearAction\(I\)V.*?\b\.end method'
+        content = re.sub(pattern, '', content, flags=re.DOTALL)
+
     # 2. Define the 'nuclearAction' method in Smali
-    # This is a simplified representation of the loop and shizuku call
     nuclear_method = """
     .method public nuclearAction(I)V
         .locals 8
+
         # Load Whitelist from AppPrefs
         const-string v0, "AppPrefs"
+        const/4 v1, 0x0
         invoke-virtual {p0, v0, v1}, Lcom/diffmemorymas/gamemode/pro/function/MainService;->getSharedPreferences(Ljava/lang/String;I)Landroid/content/SharedPreferences;
         move-result-object v0
+
         const-string v1, "whitelist_packages"
-        invoke-interface {v0, v1}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+        const-string v2, ""
+        invoke-interface {v0, v1, v2}, Landroid/content/SharedPreferences;->getString(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
         move-result-object v0
 
         # Get Installed Apps
@@ -33,25 +41,27 @@ def patch_main_service(smali_path):
         # Loop through apps
         invoke-interface {v1}, Ljava/util/List;->iterator()Ljava/util/Iterator;
         move-result-object v2
+
         :loop_start
         invoke-interface {v2}, Ljava/util/Iterator;->hasNext()Z
         move-result v3
-        if-nez v3, :cond_done
+        if-eqz v3, :cond_done
 
         invoke-interface {v2}, Ljava/util/Iterator;->next()Ljava/lang/Object;
         move-result-object v3
         check-cast v3, Landroid/content/pm/ApplicationInfo;
         iget-object v4, v3, Landroid/content/pm/ApplicationInfo;->packageName:Ljava/lang/String;
 
-        # Check Whitelist (Simplified)
+        # Check Whitelist
+        if-eqz v0, :cond_check_exec
         invoke-virtual {v0, v4}, Ljava/lang/String;->contains(Ljava/lang/CharSequence;)Z
         move-result v5
-        if-eqz v5, :cond_exec
+        if-eqz v5, :cond_check_exec
         goto :loop_start
 
-        :cond_exec
-        # Check Mode (p0 is the mode int)
-        if-eqz p0, :cond_kill
+        :cond_check_exec
+        # Check Mode (p1 is the mode parameter: 0 = force-stop, 1 = suspend)
+        if-eqz p1, :cond_kill
         const-string v5, "pm suspend "
         goto :do_cmd
 
